@@ -14,11 +14,12 @@ export default function AppStartInterstitial({
   const { isProMember } = useRevenueCat();
   const hasShownAd = useRef(false);
 
+  const hideForSubscriber = AppConfig.admob.hideAdsForSubscribers && isProMember;
   const shouldShowAd =
     AppConfig.features.admob &&
     AppConfig.admob.interstitial.enabled &&
     AppConfig.admob.interstitial.showOnAppStart &&
-    !isProMember;
+    !hideForSubscriber;
 
   const { play, isLoading } = useInterstitialAd({
     adUnitId: INTERSTITIAL_AD_UNIT_ID,

@@ -12,13 +12,15 @@ export const AppConfig = {
 
   // Feature Flags
   features: {
-    subscription: false, // Enable RevenueCat subscription
+    subscription: true, // Enable RevenueCat subscription
     admob: true, // Enable Google AdMob ads
     analytics: true, // Enable Firebase Analytics
   },
 
   // AdMob Configuration
   admob: {
+    // Hide ads for premium subscribers
+    hideAdsForSubscribers: true,
     // Interstitial Ads
     interstitial: {
       enabled: true,

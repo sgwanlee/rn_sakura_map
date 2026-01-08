@@ -9,11 +9,12 @@ import { useRevenueCat } from "../contexts/RevenueCatContext";
 
 export default function HomeScreen() {
   const { isProMember } = useRevenueCat();
+  const hideForSubscriber = AppConfig.admob.hideAdsForSubscribers && isProMember;
   const showAd =
     AppConfig.features.admob &&
     AppConfig.admob.banner.enabled &&
     AppConfig.admob.banner.showOnHome &&
-    !isProMember;
+    !hideForSubscriber;
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>

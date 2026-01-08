@@ -25,11 +25,12 @@ export default function SettingsScreen() {
   const navigation = useNavigation<any>();
   const { isProMember, restorePurchases } = useRevenueCat();
   const showSubscriptionFeatures = AppConfig.features.subscription;
+  const hideForSubscriber = AppConfig.admob.hideAdsForSubscribers && isProMember;
   const showAd =
     AppConfig.features.admob &&
     AppConfig.admob.banner.enabled &&
     AppConfig.admob.banner.showOnSettings &&
-    !isProMember;
+    !hideForSubscriber;
 
   const handleRestorePurchases = async () => {
     try {
