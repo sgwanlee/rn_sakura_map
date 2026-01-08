@@ -1,0 +1,42 @@
+import { useEffect, useRef } from "react";
+import { AppConfig } from "../config/app.config";
+import { useRevenueCat } from "../contexts/RevenueCatContext";
+import useInterstitialAd from "../hooks/useInterstitialAd";
+import { INTERSTITIAL_AD_UNIT_ID } from "../constants/ads";
+
+interface AppStartInterstitialProps {
+  children: React.ReactNode;
+}
+
+export default function AppStartInterstitial({
+  children,
+}: AppStartInterstitialProps) {
+  const { isProMember } = useRevenueCat();
+  const hasShownAd = useRef(false);
+
+  const shouldShowAd =
+    AppConfig.features.admob &&
+    AppConfig.admob.interstitial.enabled &&
+    AppConfig.admob.interstitial.showOnAppStart &&
+    !isProMember;
+
+  const { play, isLoading } = useInterstitialAd({
+    adUnitId: INTERSTITIAL_AD_UNIT_ID,
+    onClose: () => {
+      console.log("[AppStartInterstitial] Ad closed");
+    },
+  });
+
+  useEffect(() => {
+    if (shouldShowAd && !hasShownAd.current) {
+      hasShownAd.current = true;
+      // Small delay to ensure app is fully loaded
+      const timer = setTimeout(() => {
+        play();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [shouldShowAd]);
+
+  return <>{children}</>;
+}

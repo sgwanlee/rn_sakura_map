@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 13.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true,
+      "node": "24.3.0",
+      "env": {
+        "EAS_BUILD_DISABLE_NPM_CACHE": "1",
+        "EXPO_PUBLIC_RC_IOS": "appl_nHUaaQwJJWPlwyJaaCNzIPMICxP",
+        "EXPO_PUBLIC_RC_ANDROID": "goog_tQMtbwCVLXtABrKEidThbRDbDci"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6756670258"
+      }
+    }
+  }
+}
