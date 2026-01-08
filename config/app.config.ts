@@ -9,6 +9,15 @@ export const AppConfig = {
   // App Info
   appName: "My App",
   appTagline: "Your app tagline here",
+  contactEmail: "c@house201.com",
+
+  // Legal Links
+  legal: {
+    eulaUrl:
+      "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    privacyPolicyUrl:
+      "https://halved-biplane-9d8.notion.site/10xEnglish-Privacy-Policy-2d9f4fbcf98180b08e09ecd3b35529ed?source=copy_link",
+  },
 
   // Feature Flags
   features: {
@@ -32,6 +41,22 @@ export const AppConfig = {
       showOnHome: true,
       showOnSettings: true,
       showOnPremium: false, // Usually no ads on premium/paywall screen
+    },
+    // Ad Unit IDs (from environment variables)
+    adUnitIds: {
+      interstitial: {
+        ios: process.env.EXPO_PUBLIC_IOS_INTERSTITIAL_AD_UNIT_ID ?? "",
+        android: process.env.EXPO_PUBLIC_ANDROID_INTERSTITIAL_AD_UNIT_ID ?? "",
+      },
+      homeBanner: {
+        ios: process.env.EXPO_PUBLIC_IOS_HOME_BANNER_AD_UNIT_ID ?? "",
+        android: process.env.EXPO_PUBLIC_ANDROID_HOME_BANNER_AD_UNIT_ID ?? "",
+      },
+      settingsBanner: {
+        ios: process.env.EXPO_PUBLIC_IOS_SETTINGS_BANNER_AD_UNIT_ID ?? "",
+        android:
+          process.env.EXPO_PUBLIC_ANDROID_SETTINGS_BANNER_AD_UNIT_ID ?? "",
+      },
     },
   },
 
