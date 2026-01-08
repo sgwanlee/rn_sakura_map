@@ -297,17 +297,13 @@ export default function OnboardingScreen({
         {/* Legal Links */}
         <View style={styles.legalLinks}>
           <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(
-                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-              )
-            }
+            onPress={() => Linking.openURL(AppConfig.legal.eulaUrl)}
           >
             <Text style={styles.legalLinkText}>EULA</Text>
           </TouchableOpacity>
           <Text style={styles.legalDivider}>|</Text>
           <TouchableOpacity
-            onPress={() => Linking.openURL("https://example.com/privacy")}
+            onPress={() => Linking.openURL(AppConfig.legal.privacyPolicyUrl)}
           >
             <Text style={styles.legalLinkText}>Privacy Policy</Text>
           </TouchableOpacity>

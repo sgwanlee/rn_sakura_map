@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRevenueCat } from "../contexts/RevenueCatContext";
 import { ENTITLEMENT_ID } from "../constants/subscription";
 import Colors from "../constants/colors";
+import { AppConfig } from "../config/app.config";
 
 interface PaywallScreenProps {
   showCloseButton?: boolean;
@@ -327,21 +328,13 @@ export default function PaywallScreen({
         {/* Legal Links */}
         <View style={styles.legalLinks}>
           <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(
-                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-              )
-            }
+            onPress={() => Linking.openURL(AppConfig.legal.eulaUrl)}
           >
             <Text style={styles.legalLinkText}>EULA</Text>
           </TouchableOpacity>
           <Text style={styles.legalDivider}>|</Text>
           <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(
-                "https://halved-biplane-9d8.notion.site/10xEnglish-Privacy-Policy-2d9f4fbcf98180b08e09ecd3b35529ed?source=copy_link"
-              )
-            }
+            onPress={() => Linking.openURL(AppConfig.legal.privacyPolicyUrl)}
           >
             <Text style={styles.legalLinkText}>Privacy Policy</Text>
           </TouchableOpacity>
