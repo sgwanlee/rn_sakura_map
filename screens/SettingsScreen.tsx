@@ -63,6 +63,24 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleContact = async () => {
+    const email = AppConfig.contactEmail;
+    const subject = encodeURIComponent(`[${AppConfig.appName}] Feedback`);
+    const body = encodeURIComponent(`\n\n---\nApp Version: ${APP_VERSION}\nPlatform: ${Platform.OS}`);
+    const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(mailtoUrl);
+      if (canOpen) {
+        await Linking.openURL(mailtoUrl);
+      } else {
+        Alert.alert("Error", "Unable to open email app.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to send email.");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <StatusBar style="auto" />
@@ -154,12 +172,23 @@ export default function SettingsScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.settingItem, styles.settingItemLast]}
+            style={styles.settingItem}
             onPress={handleResetOnboarding}
           >
             <View style={styles.settingLeft}>
               <Ionicons name="refresh-outline" size={24} color="#212529" />
               <Text style={styles.settingLabel}>View Onboarding Again</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#adb5bd" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.settingItem, styles.settingItemLast]}
+            onPress={handleContact}
+          >
+            <View style={styles.settingLeft}>
+              <Ionicons name="mail-outline" size={24} color="#212529" />
+              <Text style={styles.settingLabel}>Contact Us</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#adb5bd" />
           </TouchableOpacity>
