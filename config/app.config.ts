@@ -88,6 +88,16 @@ export const AppConfig = {
     showPaywallAtEnd: true,
   },
 
+  // Store Review Configuration
+  storeReview: {
+    enabled: true,
+    // Frequency: 'one_time' | 'weekly' | 'monthly'
+    // one_time: Show only once, never again
+    // weekly: Show once per week maximum
+    // monthly: Show once per month maximum
+    frequency: "one_time" as "one_time" | "weekly" | "monthly",
+  },
+
   // Subscription Configuration (only used if features.subscription is true)
   subscription: {
     // Premium features to display on paywall
@@ -114,3 +124,4 @@ export const AppConfig = {
 // Type exports for TypeScript support
 export type OnboardingStep = (typeof AppConfig.onboarding.steps)[number];
 export type PremiumFeature = (typeof AppConfig.subscription.features)[number];
+export type StoreReviewFrequency = "one_time" | "weekly" | "monthly";
