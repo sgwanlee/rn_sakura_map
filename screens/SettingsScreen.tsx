@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { useRevenueCat } from "../contexts/RevenueCatContext";
 import { AppConfig } from "../config/app.config";
+import useStoreReview from "../hooks/useStoreReview";
 import Colors from "../constants/colors";
 import AdBanner from "../components/AdBanner";
 import { SETTINGS_BANNER_AD_UNIT_ID } from "../constants/ads";
@@ -24,7 +25,9 @@ const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 export default function SettingsScreen() {
   const navigation = useNavigation<any>();
   const { isProMember, restorePurchases } = useRevenueCat();
+  const { isAvailable: isReviewAvailable, requestReview } = useStoreReview();
   const showSubscriptionFeatures = AppConfig.features.subscription;
+  const showReviewOption = AppConfig.storeReview.enabled && isReviewAvailable;
   const hideForSubscriber = AppConfig.admob.hideAdsForSubscribers && isProMember;
   const showAd =
     AppConfig.features.admob &&
@@ -79,6 +82,10 @@ export default function SettingsScreen() {
     } catch (error) {
       Alert.alert("Error", "Unable to send email.");
     }
+  };
+
+  const handleWriteReview = async () => {
+    await requestReview();
   };
 
   return (
@@ -183,7 +190,10 @@ export default function SettingsScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.settingItem, styles.settingItemLast]}
+            style={[
+              styles.settingItem,
+              !showReviewOption && styles.settingItemLast,
+            ]}
             onPress={handleContact}
           >
             <View style={styles.settingLeft}>
@@ -192,6 +202,19 @@ export default function SettingsScreen() {
             </View>
             <Ionicons name="chevron-forward" size={20} color="#adb5bd" />
           </TouchableOpacity>
+
+          {showReviewOption && (
+            <TouchableOpacity
+              style={[styles.settingItem, styles.settingItemLast]}
+              onPress={handleWriteReview}
+            >
+              <View style={styles.settingLeft}>
+                <Ionicons name="star-outline" size={24} color="#212529" />
+                <Text style={styles.settingLabel}>Write a Review</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#adb5bd" />
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
       {showAd && <AdBanner unitId={SETTINGS_BANNER_AD_UNIT_ID} />}
