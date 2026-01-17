@@ -1,3 +1,4 @@
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -8,12 +9,14 @@ import {
   Linking,
   Platform,
   ScrollView,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { useRevenueCat } from "../contexts/RevenueCatContext";
+import { useDevSettings } from "../contexts/DevSettingsContext";
 import { AppConfig } from "../config/app.config";
 import useStoreReview from "../hooks/useStoreReview";
 import Colors from "../constants/colors";
@@ -22,10 +25,14 @@ import { SETTINGS_BANNER_AD_UNIT_ID } from "../constants/ads";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 
+const DEV_MODE_TAP_COUNT = 7;
+
 export default function SettingsScreen() {
   const navigation = useNavigation<any>();
   const { isProMember, restorePurchases } = useRevenueCat();
   const { isAvailable: isReviewAvailable, requestReview } = useStoreReview();
+  const { isDevMode, devSettings, setAdsEnabled, toggleDevMode } = useDevSettings();
+  const [versionTapCount, setVersionTapCount] = React.useState(0);
   const showSubscriptionFeatures = AppConfig.features.subscription;
   const showReviewOption = AppConfig.storeReview.enabled && isReviewAvailable;
   const hideForSubscriber = AppConfig.admob.hideAdsForSubscribers && isProMember;
@@ -33,7 +40,8 @@ export default function SettingsScreen() {
     AppConfig.features.admob &&
     AppConfig.admob.banner.enabled &&
     AppConfig.admob.banner.showOnSettings &&
-    !hideForSubscriber;
+    !hideForSubscriber &&
+    devSettings.adsEnabled;
 
   const handleRestorePurchases = async () => {
     try {
@@ -86,6 +94,40 @@ export default function SettingsScreen() {
 
   const handleWriteReview = async () => {
     await requestReview();
+  };
+
+  const handleVersionTap = () => {
+    const newCount = versionTapCount + 1;
+    setVersionTapCount(newCount);
+
+    if (newCount >= DEV_MODE_TAP_COUNT) {
+      if (!isDevMode) {
+        toggleDevMode();
+        Alert.alert("Developer Mode", "Developer mode has been enabled.");
+      }
+      setVersionTapCount(0);
+    } else if (newCount >= DEV_MODE_TAP_COUNT - 3) {
+      const remaining = DEV_MODE_TAP_COUNT - newCount;
+      Alert.alert("Developer Mode", `${remaining} more taps to enable developer mode.`);
+    }
+  };
+
+  const handleDisableDevMode = () => {
+    Alert.alert(
+      "Disable Developer Mode",
+      "Are you sure you want to disable developer mode?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Disable",
+          style: "destructive",
+          onPress: () => {
+            toggleDevMode();
+            setAdsEnabled(true);
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -166,7 +208,7 @@ export default function SettingsScreen() {
         {/* App Settings Section */}
         <Text style={styles.sectionTitle}>App Settings</Text>
         <View style={styles.settingsList}>
-          <View style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleVersionTap}>
             <View style={styles.settingLeft}>
               <Ionicons
                 name="information-circle-outline"
@@ -176,7 +218,7 @@ export default function SettingsScreen() {
               <Text style={styles.settingLabel}>App Version</Text>
             </View>
             <Text style={styles.versionText}>{APP_VERSION}</Text>
-          </View>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.settingItem}
@@ -216,6 +258,40 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* Developer Settings Section - Only show when dev mode is enabled */}
+        {isDevMode && (
+          <>
+            <Text style={styles.sectionTitle}>Developer</Text>
+            <View style={styles.settingsList}>
+              <View style={styles.settingItem}>
+                <View style={styles.settingLeft}>
+                  <Ionicons name="megaphone-outline" size={24} color="#212529" />
+                  <Text style={styles.settingLabel}>Show Ads</Text>
+                </View>
+                <Switch
+                  value={devSettings.adsEnabled}
+                  onValueChange={setAdsEnabled}
+                  trackColor={{ false: Colors.gray200, true: Colors.primary }}
+                  thumbColor={Colors.white}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.settingItem, styles.settingItemLast]}
+                onPress={handleDisableDevMode}
+              >
+                <View style={styles.settingLeft}>
+                  <Ionicons name="exit-outline" size={24} color="#e53935" />
+                  <Text style={[styles.settingLabel, { color: "#e53935" }]}>
+                    Disable Developer Mode
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color="#adb5bd" />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </ScrollView>
       {showAd && <AdBanner unitId={SETTINGS_BANNER_AD_UNIT_ID} />}
     </SafeAreaView>
