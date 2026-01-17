@@ -1,0 +1,86 @@
+{
+  "language": "한국어",
+  "common": {
+    "next": "다음",
+    "getStarted": "시작하기",
+    "cancel": "취소",
+    "confirm": "확인",
+    "ok": "확인",
+    "error": "오류",
+    "loading": "로딩 중..."
+  },
+  "tabs": {
+    "home": "홈",
+    "premium": "프리미엄",
+    "settings": "설정"
+  },
+  "settings": {
+    "title": "설정",
+    "membership": "멤버십",
+    "appSettings": "앱 설정",
+    "premiumMember": "프리미엄 멤버",
+    "freeMember": "무료 멤버",
+    "premiumDescription": "모든 콘텐츠를 무제한으로 이용할 수 있습니다.",
+    "freeDescription": "프리미엄으로 업그레이드하여 무제한 액세스를 받으세요",
+    "upgradeToPremium": "프리미엄으로 업그레이드",
+    "restorePurchases": "구매 복원",
+    "manageSubscription": "구독 관리",
+    "appVersion": "앱 버전",
+    "viewOnboarding": "온보딩 다시 보기",
+    "contactUs": "문의하기",
+    "writeReview": "리뷰 작성",
+    "restoreComplete": "복원 완료",
+    "restoreCompleteMessage": "구매 내역이 복원되었습니다.",
+    "restoreFailed": "복원 실패",
+    "restoreFailedMessage": "복원할 구매 내역이 없습니다.",
+    "restoreError": "구매 복원 중 오류가 발생했습니다.",
+    "unableToOpenSubscription": "구독 관리 페이지를 열 수 없습니다.",
+    "unableToOpenEmail": "이메일 앱을 열 수 없습니다.",
+    "unableToSendEmail": "이메일을 보낼 수 없습니다."
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "앱에 오신 것을 환영합니다",
+      "description": "놀라운 기능을 발견하고 여정을 시작하세요."
+    },
+    "features": {
+      "title": "강력한 기능",
+      "description": "손끝에서 모든 도구와 기능을 탐색하세요."
+    },
+    "getstarted": {
+      "title": "시작하기",
+      "description": "준비 완료! 경험을 시작해 봅시다."
+    }
+  },
+  "paywall": {
+    "unlockPremium": "프리미엄 기능 잠금 해제",
+    "unlimitedAccess": "모든 학습 콘텐츠 무제한 이용",
+    "annual": "연간 구독",
+    "monthly": "월간 구독",
+    "subscription": "구독",
+    "perMonth": "월",
+    "save": "{{percent}}% 할인",
+    "termsText": "구독은 확인 시 iTunes 계정으로 청구됩니다. 구독은 현재 기간이 끝나기 최소 24시간 전에 자동 갱신을 끄지 않으면 자동으로 갱신됩니다.",
+    "eula": "EULA",
+    "privacyPolicy": "개인정보 처리방침",
+    "startSubscription": "시작하기",
+    "restorePurchases": "구매 복원",
+    "startFree": "무료로 시작",
+    "selectProduct": "구독 상품을 선택해주세요.",
+    "subscriptionComplete": "구독 완료",
+    "subscriptionActivated": "프리미엄 구독이 활성화되었습니다!",
+    "restoreComplete": "복원 완료",
+    "restoreCompleteMessage": "구독이 복원되었습니다!",
+    "restoreFailed": "복원 실패",
+    "restoreFailedMessage": "복원할 구독이 없습니다.",
+    "purchaseError": "구매 오류",
+    "purchaseErrorMessage": "구매 중 오류가 발생했습니다. 다시 시도해주세요.",
+    "restoreError": "복원 오류",
+    "restoreErrorMessage": "구매 복원 중 오류가 발생했습니다.",
+    "unableToLoad": "구독 옵션을 불러올 수 없습니다.",
+    "premiumSubscription": "프리미엄 멤버십",
+    "subscribing": "구독 중",
+    "pricePerYear": "{{price}}/년",
+    "pricePerMonth": "{{price}}/월"
+  }
+}

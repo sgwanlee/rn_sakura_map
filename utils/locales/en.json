@@ -1,0 +1,86 @@
+{
+  "language": "English",
+  "common": {
+    "next": "Next",
+    "getStarted": "Get Started",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "ok": "OK",
+    "error": "Error",
+    "loading": "Loading..."
+  },
+  "tabs": {
+    "home": "Home",
+    "premium": "Premium",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "membership": "Membership",
+    "appSettings": "App Settings",
+    "premiumMember": "Premium Member",
+    "freeMember": "Free Member",
+    "premiumDescription": "You have unlimited access to all content.",
+    "freeDescription": "Upgrade to Premium for unlimited access",
+    "upgradeToPremium": "Upgrade to Premium",
+    "restorePurchases": "Restore Purchases",
+    "manageSubscription": "Manage Subscription",
+    "appVersion": "App Version",
+    "viewOnboarding": "View Onboarding Again",
+    "contactUs": "Contact Us",
+    "writeReview": "Write a Review",
+    "restoreComplete": "Restore Complete",
+    "restoreCompleteMessage": "Your purchases have been restored.",
+    "restoreFailed": "Restore Failed",
+    "restoreFailedMessage": "No purchases found to restore.",
+    "restoreError": "An error occurred while restoring purchases.",
+    "unableToOpenSubscription": "Unable to open subscription management page.",
+    "unableToOpenEmail": "Unable to open email app.",
+    "unableToSendEmail": "Unable to send email."
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to Our App",
+      "description": "Discover amazing features and get started with your journey."
+    },
+    "features": {
+      "title": "Powerful Features",
+      "description": "Explore all the tools and capabilities at your fingertips."
+    },
+    "getstarted": {
+      "title": "Get Started",
+      "description": "You're all set! Let's begin your experience."
+    }
+  },
+  "paywall": {
+    "unlockPremium": "Unlock Premium Features",
+    "unlimitedAccess": "Unlimited access to all learning content",
+    "annual": "Annual",
+    "monthly": "Monthly",
+    "subscription": "Subscription",
+    "perMonth": "per month",
+    "save": "Save {{percent}}%",
+    "termsText": "Subscription is charged to your iTunes account at confirmation. Subscription auto-renews unless canceled at least 24 hours before the end of the current period.",
+    "eula": "EULA",
+    "privacyPolicy": "Privacy Policy",
+    "startSubscription": "Get Started",
+    "restorePurchases": "Restore Purchases",
+    "startFree": "Start Free",
+    "selectProduct": "Please select a subscription product.",
+    "subscriptionComplete": "Subscription Complete",
+    "subscriptionActivated": "Your premium subscription has been activated!",
+    "restoreComplete": "Restore Complete",
+    "restoreCompleteMessage": "Your subscription has been restored!",
+    "restoreFailed": "Restore Failed",
+    "restoreFailedMessage": "No subscription found to restore.",
+    "purchaseError": "Purchase Error",
+    "purchaseErrorMessage": "An error occurred during purchase. Please try again.",
+    "restoreError": "Restore Error",
+    "restoreErrorMessage": "An error occurred while restoring purchases.",
+    "unableToLoad": "Unable to load subscription options.",
+    "premiumSubscription": "Premium Subscription",
+    "subscribing": "Subscribing",
+    "pricePerYear": "{{price}}/year",
+    "pricePerMonth": "{{price}}/month"
+  }
+}
