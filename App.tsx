@@ -7,7 +7,9 @@ import MainNavigator from "./components/MainNavigator";
 import OnboardingScreen, { OnboardingData } from "./screens/OnboardingScreen";
 import AppStartInterstitial from "./components/AppStartInterstitial";
 import { RevenueCatProvider } from "./contexts/RevenueCatContext";
+import { DevSettingsProvider } from "./contexts/DevSettingsContext";
 import { AppConfig } from "./config/app.config";
+import { initI18n } from "./utils/i18n";
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -30,8 +32,10 @@ if (AppConfig.features.admob) {
 export default function App() {
   const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
+    initI18n(() => setI18nReady(true));
     checkOnboardingStatus();
   }, []);
 
@@ -49,10 +53,10 @@ export default function App() {
 
   // Hide splash screen when app is ready
   const onLayoutRootView = useCallback(async () => {
-    if (!isLoading) {
+    if (!isLoading && i18nReady) {
       await SplashScreen.hideAsync();
     }
-  }, [isLoading]);
+  }, [isLoading, i18nReady]);
 
   const handleOnboardingComplete = async (data: OnboardingData) => {
     try {
@@ -65,7 +69,7 @@ export default function App() {
   };
 
   // Show nothing while loading
-  if (isLoading) {
+  if (isLoading || !i18nReady) {
     return null;
   }
 
@@ -87,14 +91,16 @@ export default function App() {
   if (AppConfig.features.subscription) {
     return (
       <SafeAreaProvider onLayout={onLayoutRootView}>
-        <RevenueCatProvider>{renderContent()}</RevenueCatProvider>
+        <DevSettingsProvider>
+          <RevenueCatProvider>{renderContent()}</RevenueCatProvider>
+        </DevSettingsProvider>
       </SafeAreaProvider>
     );
   }
 
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
-      {renderContent()}
+      <DevSettingsProvider>{renderContent()}</DevSettingsProvider>
     </SafeAreaProvider>
   );
 }
