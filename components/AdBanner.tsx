@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { HOME_BANNER_AD_UNIT_ID } from "../constants/ads";
+import { useDevSettings } from "../contexts/DevSettingsContext";
 
 interface AdBannerProps {
   unitId?: string;
@@ -20,7 +21,13 @@ const AdBanner: React.FC<AdBannerProps> = ({
 }) => {
   const [adLoaded, setAdLoaded] = useState(false);
   const [adError, setAdError] = useState(false);
+  const { devSettings } = useDevSettings();
   const bannerHeight = getBannerHeight();
+
+  // Hide ads when disabled in dev settings
+  if (!devSettings.adsEnabled) {
+    return null;
+  }
 
   const handleAdLoaded = () => {
     console.log("[AdBanner] Banner ad loaded successfully");
