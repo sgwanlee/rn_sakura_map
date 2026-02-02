@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useRef, useCallback } from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { HOME_BANNER_AD_UNIT_ID } from "../constants/ads";
@@ -16,12 +16,13 @@ const getBannerHeight = () => {
   return 50; // Standard banner for phones
 };
 
-const AdBanner: React.FC<AdBannerProps> = ({
+const AdBanner: React.FC<AdBannerProps> = memo(({
   unitId = HOME_BANNER_AD_UNIT_ID,
 }) => {
   const [adLoaded, setAdLoaded] = useState(false);
   const [adError, setAdError] = useState(false);
   const { devSettings } = useDevSettings();
+  const hasLoggedLoad = useRef(false);
   const bannerHeight = getBannerHeight();
 
   // Hide ads when disabled in dev settings
@@ -29,17 +30,21 @@ const AdBanner: React.FC<AdBannerProps> = ({
     return null;
   }
 
-  const handleAdLoaded = () => {
-    console.log("[AdBanner] Banner ad loaded successfully");
+  const handleAdLoaded = useCallback(() => {
+    if (!hasLoggedLoad.current) {
+      console.log("[AdBanner] Banner ad loaded successfully");
+      hasLoggedLoad.current = true;
+    }
     setAdLoaded(true);
     setAdError(false);
-  };
+  }, []);
 
-  const handleAdFailedToLoad = (error: any) => {
+  const handleAdFailedToLoad = useCallback((error: any) => {
     console.error("[AdBanner] Banner ad failed to load:", error);
     setAdError(true);
     setAdLoaded(false);
-  };
+    hasLoggedLoad.current = false;
+  }, []);
 
   // Return placeholder with fixed height even if there's an error
   // This prevents layout shift
@@ -90,5 +95,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
 });
+
+AdBanner.displayName = "AdBanner";
 
 export default AdBanner;
