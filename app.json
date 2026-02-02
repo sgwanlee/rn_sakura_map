@@ -17,8 +17,14 @@
       "bundleIdentifier": "com.house201.yourapp",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleAllowMixedLocalizations": true
       }
+    },
+    "locales": {
+      "en": "./config/i18n/en.json",
+      "ko": "./config/i18n/ko.json",
+      "ja": "./config/i18n/ja.json"
     },
     "android": {
       "adaptiveIcon": {
