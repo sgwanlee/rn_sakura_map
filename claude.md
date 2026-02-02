@@ -182,3 +182,68 @@ Set these in `eas.json` for production builds:
 ### Custom analytics events
 1. Add event function in `/utils/analytics.ts`
 2. Call from components as needed
+
+## Rules
+
+- **모든 새로운 기능은 반드시 Amplitude + Firebase Analytics 이중 이벤트 추적을 포함해야 함** (Analytics 섹션 참조)
+- **새로운 기능 추가 시 `docs/events.md` 파일에 Analytics 이벤트를 문서화해야 함**
+  - 이벤트 이름, 파라미터, 설명을 표 형식으로 정리
+  - 해당 기능이 어느 화면/컴포넌트에서 발생하는지 명시
+
+### Analytics
+
+The app uses **dual analytics tracking** with both **Amplitude** and **Google Analytics (Firebase)** for comprehensive user behavior insights. Analytics setup is located in `utils/analytics.ts`.
+
+**IMPORTANT**: All events are automatically tracked on both platforms through the `trackEvent` helper function. Any new tracking function MUST use this dual-platform approach.
+
+#### Current Tracked Events
+
+- **Weight Tracking**
+  - `add_morning_weight`: Morning weight entry added
+  - `add_evening_weight`: Evening weight entry added
+- **UI Interactions**
+  - `tab_visited`: Tab navigation tracking
+  - `background_color_changed`: Theme/color changes
+  - `font_changed`: Font selection changes
+
+#### Adding New Event Tracking
+
+**IMPORTANT**: Every new feature MUST include appropriate event tracking on BOTH Amplitude and Firebase Analytics. Follow these steps:
+
+1. **Define the event** in `utils/analytics.ts`:
+
+```typescript
+export const trackNewFeature = (params: {
+  featureName: string;
+  additionalData?: any;
+}) => {
+  trackEvent("feature_used", params); // This sends to both Amplitude and Firebase
+};
+```
+
+2. **Implement tracking** in your component:
+
+```typescript
+import { trackNewFeature } from "@/utils/analytics";
+
+// In your component
+const handleFeatureUse = () => {
+  trackNewFeature({
+    featureName: "your_feature",
+    additionalData: {
+      /* relevant data */
+    },
+  });
+  // Your feature logic
+};
+```
+
+3. **Event Naming Convention**:
+   - Use snake_case for event names
+   - Be descriptive but concise
+   - Include action_target format (e.g., `add_weight`, `change_theme`)
+
+4. **Required Event Properties**:
+   - Always include relevant context (screen, component, etc.)
+   - Include timestamp if not automatically added
+   - Add user action type (tap, swipe, input, etc.) where applicable
