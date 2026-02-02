@@ -94,16 +94,6 @@ export default function PaywallScreen({
     return priceString;
   };
 
-  const getPackageLabel = (packageType: string) => {
-    switch (packageType) {
-      case "ANNUAL":
-        return "연간 구독";
-      case "MONTHLY":
-        return "월간 구독";
-      default:
-        return "구독";
-    }
-  };
 
   const getSavingsText = (pkgs: typeof packages) => {
     const monthly = pkgs.find((p: any) => p.packageType === "MONTHLY");
@@ -296,7 +286,7 @@ export default function PaywallScreen({
                 </View>
                 <View style={styles.packageInfo}>
                   <Text style={styles.packageName}>
-                    {getPackageLabel(pkg.packageType)}
+                    {pkg.product.title}
                   </Text>
                   <Text style={styles.packagePrice}>
                     {formatPrice(pkg.product.priceString, pkg.packageType)}
