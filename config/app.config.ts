@@ -98,6 +98,17 @@ export const AppConfig = {
     frequency: "one_time" as "one_time" | "weekly" | "monthly",
   },
 
+  // Feedback Configuration
+  feedback: {
+    enabled: true,
+    maxSubmissionsPerHour: 5,
+    nicknameMinLength: 3,
+    nicknameMaxLength: 20,
+    contentMinLength: 10,
+    contentMaxLength: 1000,
+    slackWebhookUrl: process.env.EXPO_PUBLIC_SLACK_WEBHOOK_URL ?? "",
+  },
+
   // Subscription Configuration (only used if features.subscription is true)
   subscription: {
     // Premium features to display on paywall

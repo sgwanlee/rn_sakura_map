@@ -10,6 +10,8 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import PaywallScreen from "../screens/PaywallScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import FeedbackScreen from "../screens/FeedbackScreen";
+import FeedbackListScreen from "../screens/FeedbackListScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -104,6 +106,22 @@ export default function MainNavigator() {
             />
           )}
         </Stack.Screen>
+        <Stack.Screen
+          name="Feedback"
+          component={FeedbackScreen}
+          options={{
+            animation: "slide_from_bottom",
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="FeedbackList"
+          component={FeedbackListScreen}
+          options={{
+            animation: "slide_from_bottom",
+            presentation: "modal",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
