@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MobileAds from "react-native-google-mobile-ads";
@@ -33,6 +33,7 @@ export default function App() {
   const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [i18nReady, setI18nReady] = useState(false);
+  const [splashScreenHidden, setSplashScreenHidden] = useState(false);
 
   useEffect(() => {
     initI18n(() => setI18nReady(true));
@@ -51,13 +52,6 @@ export default function App() {
     }
   };
 
-  // Hide splash screen when app is ready
-  const onLayoutRootView = useCallback(async () => {
-    if (!isLoading && i18nReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isLoading, i18nReady]);
-
   const handleOnboardingComplete = async (data: OnboardingData) => {
     try {
       await AsyncStorage.setItem(ONBOARDING_KEY, "true");
@@ -73,34 +67,60 @@ export default function App() {
     return null;
   }
 
-  // Wrap content with providers based on configuration
-  const renderContent = () => {
-    if (!onboardingCompleted) {
-      return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+  // 온보딩이 완료되지 않은 경우 스플래시 스크린 숨기고 온보딩 표시
+  // 온보딩 중에는 전면광고를 표시하지 않음
+  if (!onboardingCompleted) {
+    // Hide splash screen for onboarding
+    if (!splashScreenHidden) {
+      SplashScreen.hideAsync();
+      setSplashScreenHidden(true);
     }
-    // Wrap MainNavigator with AppStartInterstitial for app start ads
-    return (
-      <AppStartInterstitial>
-        <MainNavigator />
-      </AppStartInterstitial>
-    );
-  };
 
+    const onboardingContent = (
+      <OnboardingScreen onComplete={handleOnboardingComplete} />
+    );
+
+    if (AppConfig.features.subscription) {
+      return (
+        <SafeAreaProvider>
+          <DevSettingsProvider>
+            <RevenueCatProvider>{onboardingContent}</RevenueCatProvider>
+          </DevSettingsProvider>
+        </SafeAreaProvider>
+      );
+    }
+
+    return (
+      <SafeAreaProvider>
+        <DevSettingsProvider>{onboardingContent}</DevSettingsProvider>
+      </SafeAreaProvider>
+    );
+  }
+
+  // 온보딩 완료 후: AppStartInterstitial에서 스플래시 스크린과 광고를 관리
   // Always wrap with RevenueCatProvider if subscription is enabled
   // This ensures the context is available even if not actively using it
   if (AppConfig.features.subscription) {
     return (
-      <SafeAreaProvider onLayout={onLayoutRootView}>
+      <SafeAreaProvider>
         <DevSettingsProvider>
-          <RevenueCatProvider>{renderContent()}</RevenueCatProvider>
+          <RevenueCatProvider>
+            <AppStartInterstitial>
+              <MainNavigator />
+            </AppStartInterstitial>
+          </RevenueCatProvider>
         </DevSettingsProvider>
       </SafeAreaProvider>
     );
   }
 
   return (
-    <SafeAreaProvider onLayout={onLayoutRootView}>
-      <DevSettingsProvider>{renderContent()}</DevSettingsProvider>
+    <SafeAreaProvider>
+      <DevSettingsProvider>
+        <AppStartInterstitial>
+          <MainNavigator />
+        </AppStartInterstitial>
+      </DevSettingsProvider>
     </SafeAreaProvider>
   );
 }
