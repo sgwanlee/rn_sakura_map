@@ -36,7 +36,17 @@
     "restoreError": "구매 복원 중 오류가 발생했습니다.",
     "unableToOpenSubscription": "구독 관리 페이지를 열 수 없습니다.",
     "unableToOpenEmail": "이메일 앱을 열 수 없습니다.",
-    "unableToSendEmail": "이메일을 보낼 수 없습니다."
+    "unableToSendEmail": "이메일을 보낼 수 없습니다.",
+    "update": {
+      "title": "업데이트 가능",
+      "description": "새 버전 v{{version}}이 출시되었습니다"
+    }
+  },
+  "versionChecker": {
+    "title": "업데이트 알림",
+    "messageOptional": "새로운 버전(v{{version}})이 출시되었습니다. 업데이트하시겠습니까?",
+    "messageRequired": "새로운 버전(v{{version}})이 출시되었습니다. 앱을 계속 사용하려면 업데이트가 필요합니다.",
+    "update": "업데이트"
   },
   "onboarding": {
     "welcome": {

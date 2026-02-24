@@ -36,7 +36,17 @@
     "restoreError": "An error occurred while restoring purchases.",
     "unableToOpenSubscription": "Unable to open subscription management page.",
     "unableToOpenEmail": "Unable to open email app.",
-    "unableToSendEmail": "Unable to send email."
+    "unableToSendEmail": "Unable to send email.",
+    "update": {
+      "title": "Update Available",
+      "description": "New version v{{version}} is available"
+    }
+  },
+  "versionChecker": {
+    "title": "Update Available",
+    "messageOptional": "A new version (v{{version}}) is available. Would you like to update?",
+    "messageRequired": "A new version (v{{version}}) is available. You must update to continue using the app.",
+    "update": "Update"
   },
   "onboarding": {
     "welcome": {

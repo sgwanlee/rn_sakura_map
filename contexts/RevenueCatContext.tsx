@@ -17,6 +17,7 @@ import {
   REVENUECAT_API_KEY_ANDROID,
   ENTITLEMENT_ID,
 } from "../constants/subscription";
+import { useDevSettings } from "./DevSettingsContext";
 
 interface RevenueCatContextType {
   isProMember: boolean;
@@ -37,6 +38,7 @@ interface RevenueCatProviderProps {
 }
 
 export function RevenueCatProvider({ children }: RevenueCatProviderProps) {
+  const { devSettings, isDevMode } = useDevSettings();
   const [isProMember, setIsProMember] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [currentOffering, setCurrentOffering] =
@@ -126,10 +128,13 @@ export function RevenueCatProvider({ children }: RevenueCatProviderProps) {
     }
   };
 
+  const effectiveIsProMember =
+    isDevMode && devSettings.subscriptionOverride ? true : isProMember;
+
   return (
     <RevenueCatContext.Provider
       value={{
-        isProMember,
+        isProMember: effectiveIsProMember,
         customerInfo,
         currentOffering,
         isLoading,

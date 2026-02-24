@@ -22,7 +22,9 @@ import { AppConfig } from "../config/app.config";
 import useStoreReview from "../hooks/useStoreReview";
 import Colors from "../constants/colors";
 import AdBanner from "../components/AdBanner";
+import UpdateButton from "../components/UpdateButton";
 import { SETTINGS_BANNER_AD_UNIT_ID } from "../constants/ads";
+import { logSubscriptionOverrideToggled } from "../utils/analytics";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 
@@ -32,7 +34,7 @@ export default function SettingsScreen() {
   const navigation = useNavigation<any>();
   const { isProMember, restorePurchases } = useRevenueCat();
   const { isAvailable: isReviewAvailable, requestReview } = useStoreReview();
-  const { isDevMode, devSettings, setAdsEnabled, toggleDevMode } = useDevSettings();
+  const { isDevMode, devSettings, setAdsEnabled, setSubscriptionOverride, toggleDevMode } = useDevSettings();
   const [versionTapCount, setVersionTapCount] = React.useState(0);
   const [showLicenseModal, setShowLicenseModal] = React.useState(false);
   const showSubscriptionFeatures = AppConfig.features.subscription;
@@ -108,9 +110,6 @@ export default function SettingsScreen() {
         Alert.alert("Developer Mode", "Developer mode has been enabled.");
       }
       setVersionTapCount(0);
-    } else if (newCount >= DEV_MODE_TAP_COUNT - 3) {
-      const remaining = DEV_MODE_TAP_COUNT - newCount;
-      Alert.alert("Developer Mode", `${remaining} more taps to enable developer mode.`);
     }
   };
 
@@ -126,6 +125,7 @@ export default function SettingsScreen() {
           onPress: () => {
             toggleDevMode();
             setAdsEnabled(true);
+            setSubscriptionOverride(false);
           },
         },
       ]
@@ -141,6 +141,9 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>Settings</Text>
+
+        {/* Update Button - Shows when update is available */}
+        <UpdateButton />
 
         {/* Subscription Section - Only show if subscription feature is enabled */}
         {showSubscriptionFeatures && (
@@ -295,8 +298,8 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Developer Settings Section - Only show when dev mode is enabled */}
-        {isDevMode && (
+        {/* Developer Settings Section - Show in dev builds or when dev mode is enabled */}
+        {(__DEV__ || isDevMode) && (
           <>
             <Text style={styles.sectionTitle}>Developer</Text>
             <View style={styles.settingsList}>
@@ -308,6 +311,22 @@ export default function SettingsScreen() {
                 <Switch
                   value={devSettings.adsEnabled}
                   onValueChange={setAdsEnabled}
+                  trackColor={{ false: Colors.gray200, true: Colors.primary }}
+                  thumbColor={Colors.white}
+                />
+              </View>
+
+              <View style={styles.settingItem}>
+                <View style={styles.settingLeft}>
+                  <Ionicons name="star-outline" size={24} color="#212529" />
+                  <Text style={styles.settingLabel}>Force Pro Member</Text>
+                </View>
+                <Switch
+                  value={devSettings.subscriptionOverride}
+                  onValueChange={(value) => {
+                    setSubscriptionOverride(value);
+                    logSubscriptionOverrideToggled(value);
+                  }}
                   trackColor={{ false: Colors.gray200, true: Colors.primary }}
                   thumbColor={Colors.white}
                 />

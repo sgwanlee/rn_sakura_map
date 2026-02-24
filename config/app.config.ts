@@ -21,8 +21,8 @@ export const AppConfig = {
 
   // Feature Flags
   features: {
-    subscription: true, // Enable RevenueCat subscription
-    admob: true, // Enable Google AdMob ads
+    subscription: false, // Enable RevenueCat subscription
+    admob: false, // Enable Google AdMob ads
     analytics: true, // Enable Firebase Analytics
   },
 
@@ -107,6 +107,13 @@ export const AppConfig = {
     contentMinLength: 10,
     contentMaxLength: 1000,
     slackWebhookUrl: process.env.EXPO_PUBLIC_SLACK_WEBHOOK_URL ?? "",
+  },
+
+  // Update Check Configuration
+  update: {
+    enabled: true, // Enable version check feature
+    iosAppId: "", // App Store ID (set after publishing, e.g., "6748281990")
+    checkDelayMs: 3000, // Delay before checking for updates (ms)
   },
 
   // Subscription Configuration (only used if features.subscription is true)

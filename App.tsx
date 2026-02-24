@@ -8,6 +8,8 @@ import OnboardingScreen, { OnboardingData } from "./screens/OnboardingScreen";
 import AppStartInterstitial from "./components/AppStartInterstitial";
 import { RevenueCatProvider } from "./contexts/RevenueCatContext";
 import { DevSettingsProvider } from "./contexts/DevSettingsContext";
+import { UpdateProvider } from "./contexts/UpdateContext";
+import VersionChecker from "./components/VersionChecker";
 import { AppConfig } from "./config/app.config";
 import { initI18n } from "./utils/i18n";
 
@@ -104,11 +106,14 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <DevSettingsProvider>
-          <RevenueCatProvider>
-            <AppStartInterstitial>
-              <MainNavigator />
-            </AppStartInterstitial>
-          </RevenueCatProvider>
+          <UpdateProvider>
+            <RevenueCatProvider>
+              <AppStartInterstitial>
+                <VersionChecker />
+                <MainNavigator />
+              </AppStartInterstitial>
+            </RevenueCatProvider>
+          </UpdateProvider>
         </DevSettingsProvider>
       </SafeAreaProvider>
     );
@@ -117,9 +122,12 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <DevSettingsProvider>
-        <AppStartInterstitial>
-          <MainNavigator />
-        </AppStartInterstitial>
+        <UpdateProvider>
+          <AppStartInterstitial>
+            <VersionChecker />
+            <MainNavigator />
+          </AppStartInterstitial>
+        </UpdateProvider>
       </DevSettingsProvider>
     </SafeAreaProvider>
   );
