@@ -2,6 +2,11 @@
 
 이 문서는 앱에서 추적하는 모든 Analytics 이벤트를 정리합니다.
 모든 이벤트는 **Amplitude**와 **Firebase Analytics** 양쪽에 동시에 전송됩니다.
+또한 동일 이벤트 payload가 Firestore `analytics_events` 컬렉션에 별도로 저장됩니다.
+
+공통 파라미터: 모든 이벤트에 `app_slug`가 자동 포함됩니다.
+
+Firestore 저장 필드: `event_name`, `params`, `app_slug`, `app_name`, `app_version`, `platform`, `created_at`, `client_timestamp`
 
 ---
 
@@ -9,8 +14,8 @@
 
 | Event Name | Parameters | Description | Screen/Component |
 |------------|------------|-------------|------------------|
-| `onboarding_step_view` | `stepNumber`, `stepName` | 온보딩 단계 조회 | OnboardingScreen |
-| `onboarding_complete` | `completedAt` | 온보딩 완료 | OnboardingScreen |
+| `onboarding_step_view` | `app_slug`, `step_number`, `step_name` | 온보딩 단계 조회 | OnboardingScreen |
+| `onboarding_complete` | `app_slug`, `completed_at` | 온보딩 완료 | OnboardingScreen |
 
 ---
 
@@ -18,14 +23,14 @@
 
 | Event Name | Parameters | Description | Screen/Component |
 |------------|------------|-------------|------------------|
-| `paywall_view` | `source` | 페이월 화면 조회 | PaywallScreen |
-| `paywall_purchase_started` | `packageId` | 구매 시작 | PaywallScreen |
-| `paywall_purchase_success` | `packageId` | 구매 성공 | PaywallScreen |
-| `paywall_purchase_failed` | `packageId`, `error` | 구매 실패 | PaywallScreen |
-| `paywall_restore_started` | - | 복원 시작 | PaywallScreen |
-| `paywall_restore_success` | - | 복원 성공 | PaywallScreen |
-| `paywall_restore_failed` | `error` | 복원 실패 | PaywallScreen |
-| `paywall_skipped` | - | 페이월 스킵 | PaywallScreen |
+| `paywall_view` | `app_slug`, `source` | 페이월 화면 조회 | PaywallScreen |
+| `paywall_purchase_started` | `app_slug`, `package` | 구매 시작 | PaywallScreen |
+| `paywall_purchase_success` | `app_slug`, `package` | 구매 성공 | PaywallScreen |
+| `paywall_purchase_failed` | `app_slug`, `package`, `error` | 구매 실패 | PaywallScreen |
+| `paywall_restore_started` | `app_slug` | 복원 시작 | PaywallScreen |
+| `paywall_restore_success` | `app_slug` | 복원 성공 | PaywallScreen |
+| `paywall_restore_failed` | `app_slug`, `error` | 복원 실패 | PaywallScreen |
+| `paywall_skipped` | `app_slug` | 페이월 스킵 | PaywallScreen |
 
 ---
 
@@ -54,6 +59,7 @@
 | `dev_mode_enabled` | - | 개발자 모드 활성화 | SettingsScreen |
 | `dev_mode_disabled` | - | 개발자 모드 비활성화 | SettingsScreen |
 | `ads_toggled` | `enabled` | 광고 토글 (개발자) | SettingsScreen |
+| `subscription_override_toggled` | `enabled` | 구독 상태 강제 변경 (개발자) | SettingsScreen |
 
 ---
 
