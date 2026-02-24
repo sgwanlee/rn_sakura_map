@@ -179,7 +179,7 @@ export default function FeedbackScreen() {
               textAlignVertical="top"
             />
             <Text style={styles.charCount}>
-              {content.length}/{AppConfig.feedback.contentMaxLength}
+              {content.length}/{AppConfig.feedback.contentMaxLength} (최소 {AppConfig.feedback.contentMinLength}자)
             </Text>
           </View>
         </ScrollView>
