@@ -81,7 +81,7 @@ const AdBanner: React.FC<AdBannerProps> = memo(({
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
