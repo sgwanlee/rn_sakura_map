@@ -12,6 +12,10 @@ import { UpdateProvider } from "./contexts/UpdateContext";
 import VersionChecker from "./components/VersionChecker";
 import { AppConfig } from "./config/app.config";
 import { initI18n } from "./utils/i18n";
+import { initSentry, Sentry } from "./utils/sentry";
+
+// Initialize Sentry
+initSentry();
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -31,7 +35,7 @@ if (AppConfig.features.admob) {
     });
 }
 
-export default function App() {
+function App() {
   const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [i18nReady, setI18nReady] = useState(false);
@@ -132,3 +136,5 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+export default Sentry.wrap(App);
