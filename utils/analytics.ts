@@ -13,6 +13,7 @@ import firestore from "@react-native-firebase/firestore";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import { AppConfig } from "../config/app.config";
+import { logToFirestore } from "./firestoreLogger";
 
 // Development mode flag - set to false in production
 const IS_DEV = __DEV__;
@@ -120,6 +121,11 @@ export async function logOnboardingStepView(
   stepNumber: number,
   stepName: string
 ): Promise<void> {
+  logToFirestore("onboarding_logs", {
+    event: "step_view",
+    stepNumber,
+    stepName,
+  });
   await logEvent("onboarding_step_view", {
     step_number: stepNumber,
     step_name: stepName,
@@ -127,6 +133,10 @@ export async function logOnboardingStepView(
 }
 
 export async function logOnboardingComplete(completedAt: string): Promise<void> {
+  logToFirestore("onboarding_logs", {
+    event: "complete",
+    completedAt,
+  });
   await logEvent("onboarding_complete", {
     completed_at: completedAt,
   });

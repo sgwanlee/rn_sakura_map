@@ -17,6 +17,9 @@ Firestore 저장 필드: `event_name`, `params`, `app_slug`, `app_name`, `app_ve
 | `onboarding_step_view` | `app_slug`, `step_number`, `step_name` | 온보딩 단계 조회 | OnboardingScreen |
 | `onboarding_complete` | `app_slug`, `completed_at` | 온보딩 완료 | OnboardingScreen |
 
+> **Firestore REST API 로깅**: 온보딩 이벤트는 별도 Firebase 프로젝트의 `onboarding_logs` 컬렉션에도 REST API로 저장됩니다.
+> 저장 필드: `event`, `stepNumber`/`stepName`/`completedAt`, `appName`, `appSlug`, `appVersion`, `platform`, `deviceModel`, `osVersion`, `createdAt`
+
 ---
 
 ## Paywall Events
