@@ -142,6 +142,9 @@ Set these in `eas.json` for production builds:
 - `EXPO_PUBLIC_IOS_SETTINGS_BANNER_AD_UNIT_ID`
 - `EXPO_PUBLIC_ANDROID_SETTINGS_BANNER_AD_UNIT_ID`
 
+### Sentry
+- `EXPO_PUBLIC_SENTRY_DSN` - Sentry DSN (Data Source Name)
+
 ## Setup Checklist
 
 1. **Firebase**
@@ -162,7 +165,12 @@ Set these in `eas.json` for production builds:
    - Update `app.json` with app IDs
    - Set ad unit IDs in environment
 
-4. **App Configuration**
+4. **Sentry**
+   - Create Sentry project at https://sentry.io/
+   - Get DSN from project settings
+   - Set `EXPO_PUBLIC_SENTRY_DSN` in environment
+
+5. **App Configuration**
    - Update `config/app.config.ts`
    - Update `constants/subscription.ts` (entitlement ID, product IDs)
    - Replace onboarding images in `/assets/onboarding/`
