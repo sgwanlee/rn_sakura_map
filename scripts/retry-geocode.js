@@ -1,6 +1,7 @@
 const path = require("path");
 const { initializeApp, applicationDefault } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const { syncLocal } = require("./sync-local");
 require("dotenv").config();
 
 const PROJECT_ID = "sakura-map-15a21";
@@ -82,10 +83,9 @@ async function main() {
     await sleep(100);
     if (coords) {
       console.log(`  OK: ${coords.lat}, ${coords.lng}`);
-      await db.collection(COLLECTION).doc(item.id).update({
-        latitude: coords.lat,
-        longitude: coords.lng,
-      });
+      const updates = { latitude: coords.lat, longitude: coords.lng };
+      await db.collection(COLLECTION).doc(item.id).update(updates);
+      syncLocal(item.id, updates);
       ok++;
     } else {
       console.log(`  STILL FAILED`);

@@ -12,6 +12,7 @@ const fs = require("fs");
 const path = require("path");
 const { initializeApp, applicationDefault } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const { syncLocal } = require("./sync-local");
 require("dotenv").config();
 
 const PROJECT_ID = "sakura-map-15a21";
@@ -53,12 +54,15 @@ async function main() {
       const lat = parseFloat(item.lat);
       const lng = parseFloat(item.lng);
       console.log(`[${item.title}] → 직접 입력: ${lat}, ${lng}`);
-      await db.collection(COLLECTION).doc(item.id).set({
+      const updates = {
         title: item.title,
         ...(item.address ? { address: item.address } : {}),
+        ...(item.link != null ? { link: item.link } : {}),
         latitude: lat,
         longitude: lng,
-      }, { merge: true });
+      };
+      await db.collection(COLLECTION).doc(item.id).set(updates, { merge: true });
+      syncLocal(item.id, updates);
       ok++;
       continue;
     }
@@ -69,12 +73,15 @@ async function main() {
 
     if (coords) {
       console.log(`  ✓ ${coords.lat}, ${coords.lng}`);
-      await db.collection(COLLECTION).doc(item.id).set({
+      const updates = {
         title: item.title,
         address: item.address,
+        ...(item.link != null ? { link: item.link } : {}),
         latitude: coords.lat,
         longitude: coords.lng,
-      }, { merge: true });
+      };
+      await db.collection(COLLECTION).doc(item.id).set(updates, { merge: true });
+      syncLocal(item.id, updates);
       ok++;
     } else {
       console.log(`  ✗ FAILED`);
