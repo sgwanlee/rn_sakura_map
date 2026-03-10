@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import MainNavigator from "./components/MainNavigator";
 import AppStartInterstitial from "./components/AppStartInterstitial";
 import { DevSettingsProvider } from "./contexts/DevSettingsContext";
+import { SpotsProvider } from "./contexts/SpotsContext";
 import { UpdateProvider } from "./contexts/UpdateContext";
 import VersionChecker from "./components/VersionChecker";
 import { AppConfig } from "./config/app.config";
@@ -40,10 +41,12 @@ function App() {
     <SafeAreaProvider>
       <DevSettingsProvider>
         <UpdateProvider>
-          <AppStartInterstitial>
-            <VersionChecker />
-            <MainNavigator />
-          </AppStartInterstitial>
+          <SpotsProvider>
+            <AppStartInterstitial>
+              <VersionChecker />
+              <MainNavigator />
+            </AppStartInterstitial>
+          </SpotsProvider>
         </UpdateProvider>
       </DevSettingsProvider>
     </SafeAreaProvider>
