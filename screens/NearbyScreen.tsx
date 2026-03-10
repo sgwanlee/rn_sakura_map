@@ -9,14 +9,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { useRoute } from "@react-navigation/native";
-import * as Location from "expo-location";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   NaverMapView,
   NaverMapMarkerOverlay,
   type Region,
 } from "@mj-studio/react-native-naver-map";
 import { Ionicons } from "@expo/vector-icons";
+import { AppConfig } from "../config/app.config";
+import { useDevSettings } from "../contexts/DevSettingsContext";
+import AdBanner from "../components/AdBanner";
+import { HOME_BANNER_AD_UNIT_ID } from "../constants/ads";
 import Colors from "../constants/colors";
 import { BLOOM_FORECAST, type CherrySpot, type Region as SpotRegion } from "../constants/spots";
 import { useSpots } from "../hooks/useSpots";
@@ -29,44 +32,32 @@ const KOREA_CENTER: Region = {
 };
 
 export default function NearbyScreen() {
+  const navigation = useNavigation();
   const route = useRoute<any>();
+  const { devSettings } = useDevSettings();
   const { spots, loading } = useSpots();
   const mapRef = useRef<any>(null);
   const [selectedSpot, setSelectedSpot] = useState<CherrySpot | null>(null);
-  const [userLocation, setUserLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const initialSpotHandled = useRef(false);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") return;
-
-      const loc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-      setUserLocation({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-      });
-    })();
-  }, []);
-
-  // HomeScreen에서 넘어온 spotId로 카메라 이동
+  // HomeScreen에서 넘어온 spotId로 카메라 즉시 이동
   useEffect(() => {
     const spotId = route.params?.spotId;
-    if (!spotId || spots.length === 0 || !mapRef.current) return;
+    if (!spotId || spots.length === 0 || !mapRef.current || initialSpotHandled.current) return;
 
     const spot = spots.find((s) => s.id === spotId);
     if (!spot || spot.latitude === 0) return;
 
     setSelectedSpot(spot);
+    initialSpotHandled.current = true;
     mapRef.current.animateCameraTo({
       latitude: spot.latitude,
       longitude: spot.longitude,
       zoom: 14,
+      duration: 0,
     });
+    setMapReady(true);
   }, [route.params?.spotId, spots]);
 
   const handleMarkerTap = useCallback((spot: CherrySpot) => {
@@ -77,29 +68,24 @@ export default function NearbyScreen() {
     setSelectedSpot(null);
   }, []);
 
-  const moveToMyLocation = useCallback(() => {
-    if (!userLocation || !mapRef.current) return;
-    mapRef.current.animateCameraTo({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      zoom: 13,
-    });
-  }, [userLocation]);
-
   const openMap = (mapUrl: string) => {
     Linking.openURL(mapUrl);
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>내 주변 벚꽃</Text>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="chevron-back" size={24} color={Colors.textPrimary} />
+        </Pressable>
+        <Text style={styles.headerTitle}>벚꽃 지도</Text>
+        <View style={styles.headerSpacer} />
       </View>
 
       <View style={styles.mapContainer}>
-        {loading && (
+        {!mapReady && (
           <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color={Colors.primaryDark} />
           </View>
@@ -107,20 +93,14 @@ export default function NearbyScreen() {
         <NaverMapView
           ref={mapRef}
           style={styles.map}
-          initialRegion={
-            userLocation
-              ? {
-                  latitude: userLocation.latitude,
-                  longitude: userLocation.longitude,
-                  latitudeDelta: 0.5,
-                  longitudeDelta: 0.5,
-                }
-              : KOREA_CENTER
-          }
+          initialRegion={KOREA_CENTER}
           isShowLocationButton={false}
           isShowZoomControls={false}
           isShowScaleBar={false}
           isExtentBoundedInKorea
+          onInitialized={() => {
+            if (!route.params?.spotId) setMapReady(true);
+          }}
           onTapMap={handleMapTap}
         >
           {spots.filter((s) => s.latitude !== 0).map((spot) => (
@@ -129,48 +109,50 @@ export default function NearbyScreen() {
               latitude={spot.latitude}
               longitude={spot.longitude}
               anchor={{ x: 0.5, y: 1 }}
-              width={44}
-              height={52}
+              width={56}
+              height={66}
               minZoom={0}
               isMinZoomInclusive
               isMaxZoomInclusive
+              isHideCollidedMarkers={false}
+              isForceShowIcon
               onTap={() => handleMarkerTap(spot)}
               image={require("../assets/icon.png")}
             />
           ))}
         </NaverMapView>
 
-        {userLocation && (
-          <Pressable style={styles.myLocationButton} onPress={moveToMyLocation}>
-            <Ionicons name="locate" size={22} color={Colors.primaryDark} />
-          </Pressable>
-        )}
       </View>
 
       {selectedSpot && (
-        <View style={styles.bottomSheet}>
-          <View style={styles.spotCard}>
-            <View style={styles.spotInfo}>
-              <Text style={styles.spotTitle}>{selectedSpot.title}</Text>
-              <Text style={styles.spotSubRegion}>
-                {selectedSpot.region} · {selectedSpot.subRegion}
-              </Text>
-              <View style={styles.spotFooter}>
-                <View style={styles.bloomBadge}>
-                  <Ionicons name="sunny-outline" size={12} color={Colors.primaryDark} />
-                  <Text style={styles.bloomText}>
-                    {BLOOM_FORECAST[selectedSpot.region as SpotRegion]}
-                  </Text>
-                </View>
+        <View style={styles.spotCard}>
+          <View style={styles.spotInfo}>
+            <Text style={styles.spotTitle}>{selectedSpot.title}</Text>
+            <Text style={styles.spotSubRegion}>
+              {selectedSpot.region} · {selectedSpot.subRegion}
+            </Text>
+            <View style={styles.spotFooter}>
+              <View style={styles.bloomBadge}>
+                <Ionicons name="flower-outline" size={12} color={Colors.primaryDark} />
+                <Text style={styles.bloomText}>
+                  개화 {BLOOM_FORECAST[selectedSpot.region as SpotRegion].bloom}
+                </Text>
+              </View>
+              <View style={styles.buttonGroup}>
+                {selectedSpot.link ? (
+                  <Pressable
+                    style={styles.detailButton}
+                    onPress={() => Linking.openURL(selectedSpot.link)}
+                  >
+                    <Ionicons name="information-circle-outline" size={14} color={Colors.primaryDark} />
+                    <Text style={styles.detailButtonText}>자세히</Text>
+                  </Pressable>
+                ) : null}
                 <Pressable
                   style={styles.mapButton}
                   onPress={() => openMap(selectedSpot.mapUrl)}
                 >
-                  <Ionicons
-                    name="navigate-outline"
-                    size={14}
-                    color={Colors.white}
-                  />
+                  <Ionicons name="navigate-outline" size={14} color={Colors.white} />
                   <Text style={styles.mapButtonText}>길찾기</Text>
                 </Pressable>
               </View>
@@ -178,6 +160,15 @@ export default function NearbyScreen() {
           </View>
         </View>
       )}
+
+      {AppConfig.features.admob &&
+        AppConfig.admob.banner.enabled &&
+        devSettings.adsEnabled && (
+          <View style={styles.bannerWrap}>
+            <AdBanner unitId={HOME_BANNER_AD_UNIT_ID} />
+          </View>
+        )}
+      <View style={styles.bottomSafeArea} />
     </SafeAreaView>
   );
 }
@@ -188,13 +179,26 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundSecondary,
   },
   header: {
-    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
     paddingVertical: 14,
   },
+  backButton: {
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   headerTitle: {
-    fontSize: 22,
+    flex: 1,
+    textAlign: "center",
+    fontSize: 18,
     fontWeight: "800",
     color: Colors.textPrimary,
+  },
+  headerSpacer: {
+    width: 32,
   },
   mapContainer: {
     flex: 1,
@@ -212,33 +216,9 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  myLocationButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 16,
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: Colors.borderLight,
-  },
-  bottomSheet: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    paddingBottom: 24,
-  },
   spotCard: {
+    marginHorizontal: 16,
+    marginVertical: 8,
     padding: 16,
     borderRadius: 20,
     backgroundColor: Colors.white,
@@ -282,6 +262,27 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.primaryDark,
   },
+  buttonGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  detailButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 12,
+    backgroundColor: Colors.primarySoft,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+  },
+  detailButtonText: {
+    fontSize: 12,
+    fontWeight: "800",
+    color: Colors.primaryDark,
+  },
   mapButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -295,5 +296,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "800",
     color: Colors.white,
+  },
+  bannerWrap: {
+    backgroundColor: Colors.white,
+  },
+  bottomSafeArea: {
+    backgroundColor: Colors.white,
   },
 });

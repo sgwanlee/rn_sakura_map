@@ -5,7 +5,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "../constants/colors";
+import { AppConfig } from "../config/app.config";
+import { useDevSettings } from "../contexts/DevSettingsContext";
+import AdBanner from "./AdBanner";
+import { HOME_BANNER_AD_UNIT_ID } from "../constants/ads";
 import HomeScreen from "../screens/HomeScreen";
+import FestivalScreen from "../screens/FestivalScreen";
 import NearbyScreen from "../screens/NearbyScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import FeedbackScreen from "../screens/FeedbackScreen";
@@ -16,6 +21,13 @@ const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   const insets = useSafeAreaInsets();
+  const { devSettings } = useDevSettings();
+
+  const showAd =
+    AppConfig.features.admob &&
+    AppConfig.admob.banner.enabled &&
+    AppConfig.admob.banner.showOnHome &&
+    devSettings.adsEnabled;
 
   return (
     <View
@@ -56,12 +68,12 @@ function TabNavigator() {
           }}
         />
         <Tab.Screen
-          name="NearbyTab"
-          component={NearbyScreen}
+          name="FestivalTab"
+          component={FestivalScreen}
           options={{
-            tabBarLabel: "내 주변",
+            tabBarLabel: "축제",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="location-outline" size={size} color={color} />
+              <Ionicons name="calendar-outline" size={size} color={color} />
             ),
           }}
         />
@@ -76,6 +88,11 @@ function TabNavigator() {
           }}
         />
       </Tab.Navigator>
+      {showAd && (
+        <View style={{ backgroundColor: Colors.white }}>
+          <AdBanner unitId={HOME_BANNER_AD_UNIT_ID} />
+        </View>
+      )}
     </View>
   );
 }
@@ -85,6 +102,13 @@ export default function MainNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={TabNavigator} />
+        <Stack.Screen
+          name="SpotMap"
+          component={NearbyScreen}
+          options={{
+            animation: "slide_from_right",
+          }}
+        />
         <Stack.Screen
           name="Feedback"
           component={FeedbackScreen}
