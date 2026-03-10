@@ -1,29 +1,28 @@
-// Color theme for the app
-// Main theme color: Purple (#6F1FFC)
-// Point/Accent color: Orange (#F35601)
+// Sakura theme colors for the app.
 
 export const Colors = {
   // Primary colors
-  primary: "#6F1FFC",
-  primaryLight: "#9B5CFF",
-  primaryDark: "#5A19CC",
+  primary: "#FFB8C6",
+  primaryLight: "#FFD8E1",
+  primaryDark: "#A84F67",
+  primarySoft: "#FFF0F4",
 
   // Accent/Point colors
-  accent: "#F35601",
-  accentLight: "#FF7A33",
-  accentDark: "#C44500",
+  accent: "#FFC94A",
+  accentLight: "#FFE08D",
+  accentDark: "#C99418",
 
-  // Success colors (green)
+  // Success colors
   success: "#58CC02",
   successLight: "#7ED321",
   successDark: "#46A302",
 
-  // Error colors (red)
+  // Error colors
   error: "#FF4B4B",
   errorLight: "#FF7A7A",
   errorDark: "#CC3C3C",
 
-  // Warning colors (yellow)
+  // Warning colors
   warning: "#FFC800",
   warningLight: "#FFD633",
   warningDark: "#CCA000",
@@ -37,28 +36,28 @@ export const Colors = {
   gray100: "#F1F3F5",
   gray200: "#E5E5E5",
   gray300: "#DEE2E6",
-  gray400: "#AFAFAF",
+  gray400: "#B0A8AC",
   gray500: "#6C757D",
   gray600: "#495057",
-  gray700: "#3C3C3C",
-  gray800: "#212529",
-  gray900: "#1A1A1A",
+  gray700: "#4C3A42",
+  gray800: "#34252B",
+  gray900: "#23171C",
 
   // Text colors
-  textPrimary: "#212529",
-  textSecondary: "#6C757D",
+  textPrimary: "#34252B",
+  textSecondary: "#7F6B72",
   textDisabled: "#AFAFAF",
   textInverse: "#FFFFFF",
 
   // Background colors
-  background: "#FFFFFF",
-  backgroundSecondary: "#F8F9FA",
-  backgroundTertiary: "#F1F3F5",
+  background: "#FFFDFE",
+  backgroundSecondary: "#F8F5F6",
+  backgroundTertiary: "#FFF0F4",
 
   // Border colors
-  border: "#E5E5E5",
-  borderLight: "#F1F3F5",
-  borderDark: "#DEE2E6",
+  border: "#F0DDE3",
+  borderLight: "#F8EDF0",
+  borderDark: "#E7CDD5",
 
   // Overlay colors
   overlay: "rgba(0, 0, 0, 0.5)",

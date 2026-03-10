@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Feedback collection: anyone can create and read, no update/delete
+    match /feedback/{docId} {
+      allow create: if request.resource.data.keys().hasAll(['nickname', 'type', 'content', 'createdAt', 'platform'])
+                    && request.resource.data.type in ['bug', 'idea']
+                    && request.resource.data.nickname is string
+                    && request.resource.data.content is string;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    // Onboarding logs: create + read allowed, no update/delete
+    match /onboarding_logs/{docId} {
+      allow create: if request.resource.data.keys().hasAll(['event', 'appSlug', 'createdAt'])
+                    && request.resource.data.event is string;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    // Cherry blossom spots: read-only for clients, managed via admin SDK
+    match /cherry_spots/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

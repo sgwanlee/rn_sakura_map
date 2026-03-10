@@ -5,11 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "../constants/colors";
-import { AppConfig } from "../config/app.config";
 import HomeScreen from "../screens/HomeScreen";
+import NearbyScreen from "../screens/NearbyScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import PaywallScreen from "../screens/PaywallScreen";
-import OnboardingScreen from "../screens/OnboardingScreen";
 import FeedbackScreen from "../screens/FeedbackScreen";
 import FeedbackListScreen from "../screens/FeedbackListScreen";
 
@@ -18,25 +16,32 @@ const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   const insets = useSafeAreaInsets();
-  const showPremiumTab = AppConfig.features.subscription;
 
   return (
     <View
-      style={{ flex: 1, paddingBottom: insets.bottom, backgroundColor: "#ffffff" }}
+      style={{
+        flex: 1,
+        paddingBottom: insets.bottom,
+        backgroundColor: Colors.white,
+      }}
     >
       <Tab.Navigator
+        initialRouteName="HomeTab"
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: Colors.primary,
-          tabBarInactiveTintColor: "#6c757d",
+          tabBarActiveTintColor: Colors.primaryDark,
+          tabBarInactiveTintColor: Colors.textSecondary,
           tabBarStyle: {
+            height: 64,
             paddingBottom: 8,
             paddingTop: 8,
-            height: 60,
+            borderTopWidth: 1,
+            borderTopColor: Colors.border,
+            backgroundColor: "rgba(255,255,255,0.98)",
           },
           tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: "600",
+            fontSize: 11,
+            fontWeight: "700",
           },
         }}
       >
@@ -44,32 +49,29 @@ function TabNavigator() {
           name="HomeTab"
           component={HomeScreen}
           options={{
-            tabBarLabel: "Home",
+            tabBarLabel: "홈",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home-outline" size={size} color={color} />
             ),
           }}
         />
-        {showPremiumTab && (
-          <Tab.Screen
-            name="PremiumTab"
-            options={{
-              tabBarLabel: "Premium",
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="diamond-outline" size={size} color={color} />
-              ),
-            }}
-          >
-            {() => <PaywallScreen showCloseButton={false} />}
-          </Tab.Screen>
-        )}
+        <Tab.Screen
+          name="NearbyTab"
+          component={NearbyScreen}
+          options={{
+            tabBarLabel: "내 주변",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="location-outline" size={size} color={color} />
+            ),
+          }}
+        />
         <Tab.Screen
           name="SettingsTab"
           component={SettingsScreen}
           options={{
-            tabBarLabel: "Settings",
+            tabBarLabel: "마이페이지",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="settings-outline" size={size} color={color} />
+              <Ionicons name="person-outline" size={size} color={color} />
             ),
           }}
         />
@@ -83,29 +85,6 @@ export default function MainNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={TabNavigator} />
-        <Stack.Screen
-          name="Paywall"
-          component={PaywallScreen}
-          options={{
-            animation: "slide_from_bottom",
-            presentation: "modal",
-          }}
-        />
-        <Stack.Screen
-          name="Onboarding"
-          options={{
-            animation: "slide_from_bottom",
-            presentation: "containedModal",
-          }}
-        >
-          {(props) => (
-            <OnboardingScreen
-              onComplete={() => {
-                props.navigation.goBack();
-              }}
-            />
-          )}
-        </Stack.Screen>
         <Stack.Screen
           name="Feedback"
           component={FeedbackScreen}

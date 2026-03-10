@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { AppConfig } from "../config/app.config";
-import { useRevenueCat } from "../contexts/RevenueCatContext";
 import { useDevSettings } from "../contexts/DevSettingsContext";
 import useInterstitialAd from "../hooks/useInterstitialAd";
 import { INTERSTITIAL_AD_UNIT_ID } from "../constants/ads";
@@ -14,14 +13,10 @@ interface AppStartInterstitialProps {
 export default function AppStartInterstitial({
   children,
 }: AppStartInterstitialProps) {
-  const { isProMember, isLoading: isSubscriptionLoading } = useRevenueCat();
   const { devSettings } = useDevSettings();
   const [adShown, setAdShown] = useState(false);
   const [adRequested, setAdRequested] = useState(false);
   const [splashScreenHidden, setSplashScreenHidden] = useState(false);
-
-  // iOS에서 프리미엄 사용자인 경우 전면광고를 스킵
-  const shouldSkipAd = Platform.OS === "ios" && isProMember;
 
   const isAdEnabled =
     AppConfig.features.admob &&
@@ -64,25 +59,8 @@ export default function AppStartInterstitial({
         return;
       }
 
-      // 구독 로딩 중이면 대기
-      if (isSubscriptionLoading) {
-        return;
-      }
-
-      // 프리미엄 사용자면 광고 스킵
-      if (shouldSkipAd) {
-        console.log("[AppStartInterstitial] Premium user, skipping ad");
-        setAdShown(true);
-        if (!splashScreenHidden) {
-          SplashScreen.hideAsync();
-          setSplashScreenHidden(true);
-        }
-        return;
-      }
-
-      // 비프리미엄 사용자: 광고 로드 및 표시
-      console.log("[AppStartInterstitial] Non-premium user, loading and showing ad");
-      setAdRequested(true); // 중복 호출 방지
+      console.log("[AppStartInterstitial] Loading app-start interstitial");
+      setAdRequested(true);
       try {
         await play();
       } catch (error) {
@@ -96,12 +74,17 @@ export default function AppStartInterstitial({
     };
 
     showAdIfNeeded();
-  }, [adShown, adRequested, isSubscriptionLoading, shouldSkipAd, isAdEnabled, splashScreenHidden, play]);
+  }, [adShown, adRequested, isAdEnabled, splashScreenHidden, play]);
 
-  // 광고가 표시되기 전까지 앱 콘텐츠를 숨김
-  if (!adShown) {
-    return null;
-  }
-
-  return <>{children}</>;
+  // 광고 중에도 children을 렌더링(데이터 프리로딩)하되 화면에 보이지 않게 함
+  return (
+    <View style={{ flex: 1 }}>
+      {!adShown && (
+        <View style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}>
+          {children}
+        </View>
+      )}
+      {adShown && children}
+    </View>
+  );
 }
