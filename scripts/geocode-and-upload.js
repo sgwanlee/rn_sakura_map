@@ -228,6 +228,7 @@ async function main() {
       subRegion,
       title,
       mapUrl,
+      link: "",
       address,
       latitude: coords?.lat || 0,
       longitude: coords?.lng || 0,
