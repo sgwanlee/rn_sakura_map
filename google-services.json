@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "785628830264",
-    "project_id": "xenglish-7f725",
-    "storage_bucket": "xenglish-7f725.firebasestorage.app"
+    "project_number": "593588224181",
+    "project_id": "sakura-map-15a21",
+    "storage_bucket": "sakura-map-15a21.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:785628830264:android:d5cf10912c034b62ce24cd",
+        "mobilesdk_app_id": "1:593588224181:android:20e7eafa0429de8cc1fefc",
         "android_client_info": {
-          "package_name": "com.sgwanlee.englishtest"
+          "package_name": "com.house201.sakuramap"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAa30acRFGT9r4Dod_u7e8Mg-e9bVSp740"
+          "current_key": "AIzaSyDx045KoGWtzBfEJnL8bowHDi2NrJgR-3s"
         }
       ],
       "services": {

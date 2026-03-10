@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "YOUR APP TITLE",
-    "slug": "your-app-title",
+    "name": "벚꽃명소 지도",
+    "slug": "sakura-map",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,11 +14,12 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.house201.yourapp",
+      "bundleIdentifier": "com.house201.sakuramap",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "NSLocationWhenInUseUsageDescription": "내 주변 벚꽃 명소를 찾기 위해 위치 정보가 필요합니다."
       }
     },
     "locales": {
@@ -37,23 +38,29 @@
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
       ],
-      "package": "com.house201.yourapp"
+      "package": "com.house201.sakuramap"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "0771651f-d21f-40b9-b945-df066c542e97"
+        "projectId": "ef729f0a-e72c-4f56-b010-e5fa6d67978f"
       }
     },
     "plugins": [
       "expo-splash-screen",
       "expo-asset",
       "expo-audio",
+      [
+        "@mj-studio/react-native-naver-map",
+        {
+          "client_id": "omyh26vpam"
+        }
+      ],
       [
         "react-native-google-mobile-ads",
         {
@@ -62,7 +69,6 @@
         }
       ],
       "expo-font",
-      "@sentry/react-native/expo",
       "@react-native-firebase/app",
       [
         "expo-build-properties",
@@ -76,10 +82,14 @@
             "minSdkVersion": 24,
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
+            "buildToolsVersion": "35.0.0",
+            "extraMavenRepos": [
+              "https://repository.map.naver.com/archive/maven"
+            ]
           }
         }
       ]
-    ]
+    ],
+    "owner": "sgwanlee"
   }
 }
