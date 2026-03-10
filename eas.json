@@ -16,11 +16,8 @@
       "node": "24.3.0",
       "env": {
         "EAS_BUILD_DISABLE_NPM_CACHE": "1",
-        "EXPO_PUBLIC_RC_IOS": "appl_nHUaaQwJJWPlwyJaaCNzIPMICxP",
-        "EXPO_PUBLIC_RC_ANDROID": "goog_tQMtbwCVLXtABrKEidThbRDbDci",
         "EXPO_PUBLIC_FEEDBACK_FIREBASE_PROJECT_ID": "feedback-98eb9",
         "EXPO_PUBLIC_FEEDBACK_FIREBASE_API_KEY": "AIzaSyALAy-rj3lvuf8kuZZjyuRXwr-SOi_d6fs",
-        "EXPO_PUBLIC_SENTRY_DSN": ""
       }
     }
   },

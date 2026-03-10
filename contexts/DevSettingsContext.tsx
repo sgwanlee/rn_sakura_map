@@ -5,20 +5,17 @@ const DEV_SETTINGS_KEY = "dev_settings";
 
 interface DevSettings {
   adsEnabled: boolean;
-  subscriptionOverride: boolean;
 }
 
 interface DevSettingsContextType {
   devSettings: DevSettings;
   isDevMode: boolean;
   setAdsEnabled: (enabled: boolean) => void;
-  setSubscriptionOverride: (enabled: boolean) => void;
   toggleDevMode: () => void;
 }
 
 const defaultSettings: DevSettings = {
   adsEnabled: true,
-  subscriptionOverride: false,
 };
 
 const DevSettingsContext = createContext<DevSettingsContextType | undefined>(undefined);
@@ -65,12 +62,6 @@ export const DevSettingsProvider: React.FC<DevSettingsProviderProps> = ({ childr
     saveSettings(newSettings, isDevMode);
   };
 
-  const setSubscriptionOverride = (enabled: boolean) => {
-    const newSettings = { ...devSettings, subscriptionOverride: enabled };
-    setDevSettings(newSettings);
-    saveSettings(newSettings, isDevMode);
-  };
-
   const toggleDevMode = () => {
     const newDevMode = !isDevMode;
     setIsDevMode(newDevMode);
@@ -83,7 +74,6 @@ export const DevSettingsProvider: React.FC<DevSettingsProviderProps> = ({ childr
         devSettings,
         isDevMode,
         setAdsEnabled,
-        setSubscriptionOverride,
         toggleDevMode,
       }}
     >
